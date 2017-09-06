@@ -1,0 +1,57 @@
+﻿
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+
+    <div>
+        <input type="button" id="getSupp" value="get the suppliers" />
+        <input type="button" id="clearBtn" value="Clear" />
+    </div>
+    <div>
+        <ul id="list"></ul>
+    </div>
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
+
+    <script>
+
+        //when the document is ready
+        $(document).ready(function () {
+
+
+            //my supplier list
+            var orders = $("#list");
+
+            //on clicking the button
+            $("#getSupp").click(function () {
+
+                //my ajax function
+                $.ajax({
+                    type: "GET",
+                    //get the uri
+                    url: 'http://localhost:53842/suppliers.html',
+                    success: function (data) {
+                        orders.empty();
+                        $.each(data, function (index, val) {
+                            var suppDetails = "name:  " + val.CompanyName + "       PhoneNumber:" + val.PhoneNumber;
+                            //append it
+                            orders.append("<li>" + suppDetails + "</li>")
+                        });
+                    }
+
+
+
+                });
+            });
+
+            //to clear the list
+            $("#clearBtn").click(function () {
+                orders.empty();
+            })
+
+        })
+    </script>
+</body>
+</html>

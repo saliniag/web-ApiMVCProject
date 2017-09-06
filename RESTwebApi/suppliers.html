@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+    <div>
+        <label for="username" > userName </label> <br />
+        <label for="pass">password </label><br />
+        <input type="text" id="username" /><br />
+        <input type="text" id="pass"/><br />
+        <input type="button" id="getSupp" value="get the suppliers" /><br />
+        <input type="button" id="clearBtn" value="Clear" />
+    </div>
+    <div>
+        <ul id="list"></ul>
+    </div>
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
+   
+    <script>
+       
+        //when the document is ready
+        $(document).ready(function () {
+
+           
+            //my supplier list
+            var orders = $("#list");
+
+            //on clicking the button
+            $("#getSupp").click(function () {
+
+                var username = $('#username').val();
+                var password = $('#pass').val();
+                //my ajax function
+                $.ajax({
+                    type: "GET",
+                    //get the uri
+                    url: "api/Orders",
+                    dataType: "json",
+                    headers:{
+                        'Authorization': 'Basic ' + btoa(username + ':' + password)
+                                           },
+                    success: function (data) {
+                        orders.empty();
+                        $.each(data, function (index, val) {
+                            var suppDetails = "name:  " + val.CompanyName + "       PhoneNumber:" + val.PhoneNumber;
+                            //append it
+                            orders.append("<li>" + suppDetails + "</li>")
+                        });
+                       
+                    },
+                    complete: function(jqXHR){
+                        if (jqXHR.status == '401') {
+                            orders.empty();
+                            orders.append("<li>" + jqXHR.status + ':' + jqXHR.statusText + "</li>");
+                        }
+                    }
+
+
+
+                });
+            });
+
+            //to clear the list
+            $("#clearBtn").click(function () {
+                orders.empty();
+            })
+
+        })
+        </script>
+        </body>
+        </html>
